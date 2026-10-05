@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Helmholtz Particle Simulation</title>
+
+    <link
+        rel="stylesheet"
+        href="./style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     Header
+     ========================================================= -->
+
+<header class="header">
+
+    <div>
+
+        <h1>
+            HELMHOLTZ
+        </h1>
+
+        <p>
+            Charged Particle Simulation
+        </p>
+
+    </div>
+
+    <div
+        id="status"
+        class="status"
+    >
+        LOCAL ENGINE
+    </div>
+
+</header>
+
+
+<!-- =========================================================
+     Main layout
+     ========================================================= -->
+
+<main class="main-container">
+
+
+    <!-- =====================================================
+         Parameter panel
+         ===================================================== -->
+
+    <section class="panel parameter-panel">
+
+        <h2>
+            PARAMETERS
+        </h2>
+
+
+        <div class="parameter-group">
+
+            <h3>
+                Particle
+            </h3>
+
+
+            <label>
+                Charge q
+
+                <input
+                    id="q"
+                    type="number"
+                    value="1.6e-19"
+                    step="any"
+                >
+
+            </label>
+
+
+            <label>
+                Mass m
+
+                <input
+                    id="m"
+                    type="number"
+                    value="9.11e-31"
+                    step="any"
+                >
+
+            </label>
+
+        </div>
+
+
+        <div class="parameter-group">
+
+            <h3>
+                Initial Position
+            </h3>
+
+
+            <label>
+                x₀
+
+                <input
+                    id="x0"
+                    type="number"
+                    value="0"
+                    step="any"
+                >
+
+            </label>
+
+
+            <label>
+                y₀
+
+                <input
+                    id="y0"
+                    type="number"
+                    value="0"
+                    step="any"
+                >
+
+            </label>
+
+
+            <label>
+                z₀
+
+                <input
+                    id="z0"
+                    type="number"
+                    value="0"
+                    step="any"
+                >
+
+            </label>
+
+        </div>
+
+
+        <div class="parameter-group">
+
+            <h3>
+                Initial Velocity
+            </h3>
+
+
+            <label>
+                vx₀
+
+                <input
+                    id="vx0"
+                    type="number"
+                    value="1e7"
+                    step="any"
+                >
+
+            </label>
+
+
+            <label>
+                vy₀
+
+                <input
+                    id="vy0"
+                    type="number"
+                    value="0"
+                    step="any"
+                >
+
+            </label>
+
+
+            <label>
+                vz₀
+
+                <input
+                    id="vz0"
+                    type="number"
+                    value="0"
+                    step="any"
+                >
+
+            </label>
+
+        </div>
+
+
+        <div class="parameter-group">
+
+            <h3>
+                Helmholtz Coil
+            </h3>
+
+
+            <label>
+                Radius R
+
+                <input
+                    id="R"
+                    type="number"
+                    value="0.1"
+                    step="any"
+                >
+
+            </label>
+
+
+            <label>
+                Turns N
+
+                <input
+                    id="N"
+                    type="number"
+                    value="100"
+                    step="1"
+                >
+
+            </label>
+
+
+            <label>
+                Current I
+
+                <input
+                    id="I"
+                    type="number"
+                    value="5"
+                    step="any"
+                >
+
+            </label>
+
+        </div>
+
+
+        <div class="parameter-group">
+
+            <h3>
+                Simulation
+            </h3>
+
+
+            <label>
+                Periods
+
+                <input
+                    id="num_periods"
+                    type="number"
+                    value="2"
+                    step="any"
+                >
+
+            </label>
+
+
+            <label>
+                Steps / Period
+
+                <input
+                    id="steps_per_period"
+                    type="number"
+                    value="400"
+                    step="1"
+                >
+
+            </label>
+
+        </div>
+
+
+        <button
+            id="run-button"
+            class="run-button"
+        >
+            RUN SIMULATION
+        </button>
+
+    </section>
+
+
+    <!-- =====================================================
+         Viewer
+         ===================================================== -->
+
+    <section class="panel viewer-panel">
+
+        <div class="viewer-header">
+
+            <h2>
+                3D VIEWER
+            </h2>
+
+        </div>
+
+
+        <div
+            id="viewer"
+            class="viewer"
+        >
+        </div>
+
+
+        <div class="controls">
+
+            <button
+                id="play-button"
+            >
+                PLAY
+            </button>
+
+
+            <button
+                id="pause-button"
+            >
+                PAUSE
+            </button>
+
+
+            <button
+                id="reset-button"
+            >
+                RESET
+            </button>
+
+        </div>
+
+
+        <div class="timeline-container">
+
+            <input
+                id="timeline"
+                type="range"
+                min="0"
+                max="0"
+                value="0"
+            >
+
+            <span
+                id="time-display"
+            >
+                t = 0 s
+            </span>
+
+        </div>
+
+    </section>
+
+
+</main>
+
+
+<!-- =========================================================
+     Results
+     ========================================================= -->
+
+<section class="results-section">
+
+    <div class="result-card">
+
+        <span>
+            B CENTER
+        </span>
+
+        <strong id="B-center">
+            -
+        </strong>
+
+    </div>
+
+
+    <div class="result-card">
+
+        <span>
+            FIELD ERROR
+        </span>
+
+        <strong id="field-error">
+            -
+        </strong>
+
+    </div>
+
+
+    <div class="result-card">
+
+        <span>
+            CYCLOTRON PERIOD
+        </span>
+
+        <strong id="cyclotron-period">
+            -
+        </strong>
+
+    </div>
+
+
+    <div class="result-card">
+
+        <span>
+            TIME STEP
+        </span>
+
+        <strong id="dt">
+            -
+        </strong>
+
+    </div>
+
+
+    <div class="result-card">
+
+        <span>
+            TOTAL TIME
+        </span>
+
+        <strong id="total-time">
+            -
+        </strong>
+
+    </div>
+
+
+    <div class="result-card">
+
+        <span>
+            ENERGY ERROR
+        </span>
+
+        <strong id="energy-error">
+            -
+        </strong>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     Three.js、
+     ========================================================= -->
+
+<!--
+    Import map:
+    three 及其 addons 已本地化到 frontend/vendor/three（使用相对路径），
+    不依赖任何外部 CDN，可离线运行，也可直接双击 index.html（file://）打开。
+    examples/jsm 模块内部使用裸导入 `from 'three'`，
+    由 import map 将 'three' 和 'three/addons/' 解析到本地文件。
+-->
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three/build/three.module.min.js",
+    "three/addons/": "./vendor/three/examples/jsm/"
+  }
+}
+</script>
+
+
+<!-- 纯前端物理引擎（计算全部在浏览器本地完成，无需后端） -->
+<script src="./simulation.js"></script>
+
+
+
+<script type="module">
+
+    import * as THREE
+        from "three";
+
+
+    import { OrbitControls }
+        from "three/addons/controls/OrbitControls.js";
+
+
+    // 后处理模块（Bloom 辉光），供 script.js 使用
+
+    import { EffectComposer }
+        from "three/addons/postprocessing/EffectComposer.js";
+
+
+    import { RenderPass }
+        from "three/addons/postprocessing/RenderPass.js";
+
+
+    import { UnrealBloomPass }
+        from "three/addons/postprocessing/UnrealBloomPass.js";
+
+
+    // 本页面为纯前端版本：所有物理计算由 simulation.js 在浏览器本地完成，
+    // 无需后端。直接双击 index.html（file://）即可运行，
+    // 也可部署到任意静态托管平台后通过网址访问。
+
+    // Make Three.js and post-processing available to script.js
+
+    window.THREE =
+        THREE;
+
+    window.OrbitControls =
+        OrbitControls;
+
+    window.EffectComposer =
+        EffectComposer;
+
+    window.RenderPass =
+        RenderPass;
+
+    window.UnrealBloomPass =
+        UnrealBloomPass;
+
+
+    // Load our normal JavaScript
+
+    const script =
+        document.createElement(
+            "script"
+        );
+
+
+    script.src =
+        "./script.js";
+
+
+    script.onload =
+        function () {
+
+            console.log(
+                "script.js loaded."
+            );
+
+            window.startSimulationApp();
+
+        };
+
+
+    script.onerror =
+        function () {
+
+            console.error(
+                "Failed to load script.js"
+            );
+
+        };
+
+
+    document.body.appendChild(
+        script
+    );
+
+</script>
+
+
+</body>
+
+</html>
