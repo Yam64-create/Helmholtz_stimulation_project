@@ -385,6 +385,25 @@ function mapAxes(p) {
 
 
 // ============================================================
+// 坐标轴逆向映射
+//
+//   新 x 轴 -> 原 z 轴
+//   新 y 轴 -> 原 x 轴
+//   新 z 轴 -> 原 y 轴
+//
+//   即 (x, y, z) -> (y, z, x)，是 mapAxes 的逆变换。
+//   左侧输入面板用的是"显示坐标系"（与 3D 图例一致），
+//   进入物理引擎前需要用它换回引擎坐标系。
+// ============================================================
+
+function unmapAxes(q) {
+
+    return [q[1], q[2], q[0]];
+
+}
+
+
+// ============================================================
 // 创建坐标轴图例（X/Y/Z 三轴 + 文字标签）
 //   - 轴线与标签都位于 3D 场景中，随相机同频旋转
 //   - 文字使用 Sprite，始终面向相机，旋转时保持可读
@@ -810,7 +829,32 @@ function runSimulation() {
 
     // --------------------------------------------------------
     // Collect parameters
+    //
+    // 面板输入使用"显示坐标系"：X 轴 = 3D 图中的红色 X（线圈轴向）
+    //                               Y 轴 = 绿色 Y
+    //                               Z 轴 = 蓝色 Z
+    // 物理引擎内部仍按原始坐标系工作，所以送入引擎前先用
+    // unmapAxes() 换回引擎坐标，输出再经 mapAxes() 映射回显示坐标。
+    // 这样用户在面板里填的 (x, y, z)、画面上看到的方向、
+    // 右上角图例三者完全一致。
     // --------------------------------------------------------
+
+    const displayPosition = [
+        parseFloat(document.getElementById("x0").value),
+        parseFloat(document.getElementById("y0").value),
+        parseFloat(document.getElementById("z0").value)
+    ];
+
+    const displayVelocity = [
+        parseFloat(document.getElementById("vx0").value),
+        parseFloat(document.getElementById("vy0").value),
+        parseFloat(document.getElementById("vz0").value)
+    ];
+
+    const enginePosition = unmapAxes(displayPosition);
+
+    const engineVelocity = unmapAxes(displayVelocity);
+
 
     const params = {
 
@@ -818,17 +862,17 @@ function runSimulation() {
 
         m: parseFloat(document.getElementById("m").value),
 
-        x0: parseFloat(document.getElementById("x0").value),
+        x0: enginePosition[0],
 
-        y0: parseFloat(document.getElementById("y0").value),
+        y0: enginePosition[1],
 
-        z0: parseFloat(document.getElementById("z0").value),
+        z0: enginePosition[2],
 
-        vx0: parseFloat(document.getElementById("vx0").value),
+        vx0: engineVelocity[0],
 
-        vy0: parseFloat(document.getElementById("vy0").value),
+        vy0: engineVelocity[1],
 
-        vz0: parseFloat(document.getElementById("vz0").value),
+        vz0: engineVelocity[2],
 
         R: parseFloat(document.getElementById("R").value),
 
@@ -847,7 +891,12 @@ function runSimulation() {
     };
 
 
-    console.log("Parameters:", params);
+    console.log(
+        "Display-coordinate inputs (X/Y/Z):",
+        { position: displayPosition, velocity: displayVelocity }
+    );
+
+    console.log("Engine-coordinate params:", params);
 
 
     try {

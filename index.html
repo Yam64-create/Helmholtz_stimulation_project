@@ -104,15 +104,20 @@
         </div>
 
 
-        <div class="parameter-group">
+        <div class="parameter-group axis-group">
 
             <h3>
                 Initial Position
+                <span class="axis-hint">X / Y / Z · m</span>
             </h3>
 
 
-            <label>
-                x₀
+            <label class="axis-field axis-x">
+
+                <span class="axis-name">
+                    <i class="axis-dot"></i>
+                    x₀
+                </span>
 
                 <input
                     id="x0"
@@ -124,8 +129,12 @@
             </label>
 
 
-            <label>
-                y₀
+            <label class="axis-field axis-y">
+
+                <span class="axis-name">
+                    <i class="axis-dot"></i>
+                    y₀
+                </span>
 
                 <input
                     id="y0"
@@ -137,8 +146,12 @@
             </label>
 
 
-            <label>
-                z₀
+            <label class="axis-field axis-z">
+
+                <span class="axis-name">
+                    <i class="axis-dot"></i>
+                    z₀
+                </span>
 
                 <input
                     id="z0"
@@ -152,31 +165,23 @@
         </div>
 
 
-        <div class="parameter-group">
+        <div class="parameter-group axis-group">
 
             <h3>
                 Initial Velocity
+                <span class="axis-hint">X / Y / Z · m/s</span>
             </h3>
 
 
-            <label>
-                vx₀
+            <label class="axis-field axis-x">
+
+                <span class="axis-name">
+                    <i class="axis-dot"></i>
+                    vx₀
+                </span>
 
                 <input
                     id="vx0"
-                    type="number"
-                    value="1e7"
-                    step="any"
-                >
-
-            </label>
-
-
-            <label>
-                vy₀
-
-                <input
-                    id="vy0"
                     type="number"
                     value="0"
                     step="any"
@@ -185,8 +190,29 @@
             </label>
 
 
-            <label>
-                vz₀
+            <label class="axis-field axis-y">
+
+                <span class="axis-name">
+                    <i class="axis-dot"></i>
+                    vy₀
+                </span>
+
+                <input
+                    id="vy0"
+                    type="number"
+                    value="1e7"
+                    step="any"
+                >
+
+            </label>
+
+
+            <label class="axis-field axis-z">
+
+                <span class="axis-name">
+                    <i class="axis-dot"></i>
+                    vz₀
+                </span>
 
                 <input
                     id="vz0"
