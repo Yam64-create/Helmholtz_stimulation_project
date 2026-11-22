@@ -240,12 +240,13 @@ function initializeThreeJS() {
 
 
     // --------------------------------------------------------
-    // Coordinate axes
+    // Coordinate axes（带 X/Y/Z 文字的 3D 图例）
+    //   图例放在场景原点，随相机同频旋转
     // --------------------------------------------------------
 
-    const axesHelper = new THREE.AxesHelper(0.2);
+    const axisLegend = createAxisLegend(0.12);
 
-    scene.add(axesHelper);
+    scene.add(axisLegend);
 
 
     // --------------------------------------------------------
@@ -360,6 +361,138 @@ function createGlowTexture() {
     ctx.fillRect(0, 0, size, size);
 
     return new THREE.CanvasTexture(canvas);
+
+}
+
+
+// ============================================================
+// 坐标轴重映射
+//
+//   原 z 轴 -> 新 x 轴
+//   原 x 轴 -> 新 y 轴
+//   原 y 轴 -> 新 z 轴
+//
+//   即 (x, y, z) -> (z, x, y)
+//   这是绕 (1,1,1) 方向的 120° 循环置换（行列式 +1，手性不变）。
+//   轨迹与线圈统一调用，保证二者处于同一坐标系。
+// ============================================================
+
+function mapAxes(p) {
+
+    return [p[2], p[0], p[1]];
+
+}
+
+
+// ============================================================
+// 创建坐标轴图例（X/Y/Z 三轴 + 文字标签）
+//   - 轴线与标签都位于 3D 场景中，随相机同频旋转
+//   - 文字使用 Sprite，始终面向相机，旋转时保持可读
+// ============================================================
+
+function createAxisLegend(length) {
+
+    const THREE = window.THREE;
+
+    const group = new THREE.Group();
+
+
+    // 三条轴线（X 红 / Y 绿 / Z 蓝）
+    const axesHelper = new THREE.AxesHelper(length);
+
+    group.add(axesHelper);
+
+
+    // 轴端文字标签
+    const labels = [
+        { text: "X", color: 0xff5a5a, position: [length * 1.16, 0, 0] },
+        { text: "Y", color: 0x4dff88, position: [0, length * 1.16, 0] },
+        { text: "Z", color: 0x4d9cff, position: [0, 0, length * 1.16] }
+    ];
+
+    labels.forEach(function (item) {
+
+        const sprite = createAxisTextSprite(
+            item.text,
+            item.color
+        );
+
+        sprite.position.set(
+            item.position[0],
+            item.position[1],
+            item.position[2]
+        );
+
+        // 标签尺寸随轴长自适应
+        const labelSize = length * 0.20;
+
+        sprite.scale.set(labelSize, labelSize, 1);
+
+        group.add(sprite);
+
+    });
+
+
+    return group;
+
+}
+
+
+// ============================================================
+// 生成轴文字精灵（Canvas 贴图，始终面向相机）
+// ============================================================
+
+function createAxisTextSprite(text, color) {
+
+    const THREE = window.THREE;
+
+    const size = 128;
+
+    const canvas = document.createElement("canvas");
+
+    canvas.width = size;
+
+    canvas.height = size;
+
+    const ctx = canvas.getContext("2d");
+
+    ctx.clearRect(0, 0, size, size);
+
+    ctx.font = "bold 76px Arial";
+
+    ctx.textAlign = "center";
+
+    ctx.textBaseline = "middle";
+
+    // 深色描边，保证亮/暗背景上都清晰
+    ctx.lineWidth = 8;
+
+    ctx.strokeStyle = "rgba(5, 8, 12, 0.95)";
+
+    ctx.strokeText(text, size / 2, size / 2);
+
+    // 轴同色填充
+    ctx.fillStyle =
+        "#" + color.toString(16).padStart(6, "0");
+
+    ctx.fillText(text, size / 2, size / 2);
+
+    const texture = new THREE.CanvasTexture(canvas);
+
+    texture.needsUpdate = true;
+
+    const material = new THREE.SpriteMaterial({
+        map: texture,
+        transparent: true,
+        depthTest: false,
+        depthWrite: false
+    });
+
+    const sprite = new THREE.Sprite(material);
+
+    sprite.renderOrder = 10;
+
+    return sprite;
 
 }
 
@@ -742,10 +875,22 @@ function runSimulation() {
 
 
         // ----------------------------------------------------
+        // 坐标轴重映射（原 z->新 x，原 x->新 y，原 y->新 z）
+        //   轨迹、线圈统一映射，保证同一坐标系
+        // ----------------------------------------------------
+
+        const positionsMapped = data.positions.map(mapAxes);
+
+        const coil1Mapped = data.coil1.map(mapAxes);
+
+        const coil2Mapped = data.coil2.map(mapAxes);
+
+
+        // ----------------------------------------------------
         // Save trajectory
         // ----------------------------------------------------
 
-        trajectoryPoints = data.positions;
+        trajectoryPoints = positionsMapped;
 
         times = data.times;
 
@@ -799,9 +944,9 @@ function runSimulation() {
         // Create coils
         // ----------------------------------------------------
 
-        coil1Mesh = createCoil(data.coil1);
+        coil1Mesh = createCoil(coil1Mapped);
 
-        coil2Mesh = createCoil(data.coil2);
+        coil2Mesh = createCoil(coil2Mapped);
 
         scene.add(coil1Mesh);
 
@@ -829,9 +974,9 @@ function runSimulation() {
         // ----------------------------------------------------
 
         fitCamera([
-            ...trajectoryPoints,
-            ...data.coil1,
-            ...data.coil2
+            ...positionsMapped,
+            ...coil1Mapped,
+            ...coil2Mapped
         ]);
 
 
