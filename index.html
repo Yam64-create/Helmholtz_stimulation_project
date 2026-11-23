@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
 
@@ -10,7 +10,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Helmholtz Particle Simulation</title>
+    <title>亥姆霍兹线圈 · 带电粒子模拟</title>
 
     <link
         rel="stylesheet"
@@ -32,11 +32,11 @@
     <div>
 
         <h1>
-            HELMHOLTZ
+            亥姆霍兹
         </h1>
 
         <p>
-            Charged Particle Simulation
+            带电粒子模拟
         </p>
 
     </div>
@@ -45,7 +45,7 @@
         id="status"
         class="status"
     >
-        LOCAL ENGINE
+        本地引擎
     </div>
 
 </header>
@@ -65,19 +65,19 @@
     <section class="panel parameter-panel">
 
         <h2>
-            PARAMETERS
+            参数
         </h2>
 
 
         <div class="parameter-group">
 
             <h3>
-                Particle
+                粒子
             </h3>
 
 
             <label>
-                Charge q
+                电荷 q
 
                 <input
                     id="q"
@@ -90,7 +90,7 @@
 
 
             <label>
-                Mass m
+                质量 m
 
                 <input
                     id="m"
@@ -107,7 +107,7 @@
         <div class="parameter-group axis-group">
 
             <h3>
-                Initial Position
+                初始位置
                 <span class="axis-hint">X / Y / Z · m</span>
             </h3>
 
@@ -168,7 +168,7 @@
         <div class="parameter-group axis-group">
 
             <h3>
-                Initial Velocity
+                初始速度
                 <span class="axis-hint">X / Y / Z · m/s</span>
             </h3>
 
@@ -229,12 +229,12 @@
         <div class="parameter-group">
 
             <h3>
-                Helmholtz Coil
+                亥姆霍兹线圈
             </h3>
 
 
             <label>
-                Radius R
+                半径 R
 
                 <input
                     id="R"
@@ -247,7 +247,7 @@
 
 
             <label>
-                Turns N
+                匝数 N
 
                 <input
                     id="N"
@@ -260,7 +260,7 @@
 
 
             <label>
-                Current I
+                电流 I
 
                 <input
                     id="I"
@@ -277,12 +277,12 @@
         <div class="parameter-group">
 
             <h3>
-                Simulation
+                模拟
             </h3>
 
 
             <label>
-                Periods
+                周期数
 
                 <input
                     id="num_periods"
@@ -295,7 +295,7 @@
 
 
             <label>
-                Steps / Period
+                每周期步数
 
                 <input
                     id="steps_per_period"
@@ -313,7 +313,7 @@
             id="run-button"
             class="run-button"
         >
-            RUN SIMULATION
+            开始模拟
         </button>
 
     </section>
@@ -328,7 +328,7 @@
         <div class="viewer-header">
 
             <h2>
-                3D VIEWER
+                3D 视图
             </h2>
 
         </div>
@@ -346,21 +346,21 @@
             <button
                 id="play-button"
             >
-                PLAY
+                播放
             </button>
 
 
             <button
                 id="pause-button"
             >
-                PAUSE
+                暂停
             </button>
 
 
             <button
                 id="reset-button"
             >
-                RESET
+                重置
             </button>
 
         </div>
@@ -399,7 +399,7 @@
     <div class="result-card">
 
         <span>
-            B CENTER
+            中心磁场 B
         </span>
 
         <strong id="B-center">
@@ -412,7 +412,7 @@
     <div class="result-card">
 
         <span>
-            FIELD ERROR
+            磁场误差
         </span>
 
         <strong id="field-error">
@@ -425,7 +425,7 @@
     <div class="result-card">
 
         <span>
-            CYCLOTRON PERIOD
+            回旋周期
         </span>
 
         <strong id="cyclotron-period">
@@ -438,7 +438,7 @@
     <div class="result-card">
 
         <span>
-            TIME STEP
+            时间步长
         </span>
 
         <strong id="dt">
@@ -451,7 +451,7 @@
     <div class="result-card">
 
         <span>
-            TOTAL TIME
+            总时间
         </span>
 
         <strong id="total-time">
@@ -464,7 +464,7 @@
     <div class="result-card">
 
         <span>
-            ENERGY ERROR
+            能量误差
         </span>
 
         <strong id="energy-error">

@@ -335,22 +335,22 @@ function runSimulationJS(params) {
         // ----------------------------------------------------
 
         if (!(mass > 0)) {
-            throw new Error("Mass must be greater than zero.");
+            throw new Error("质量 m 必须大于零。");
         }
         if (!(R > 0)) {
-            throw new Error("Coil radius must be greater than zero.");
+            throw new Error("线圈半径 R 必须大于零。");
         }
         if (!(turns > 0)) {
-            throw new Error("Number of turns must be greater than zero.");
+            throw new Error("匝数 N 必须大于零。");
         }
         if (current === 0) {
-            throw new Error("Current cannot be zero.");
+            throw new Error("电流 I 不能为零。");
         }
         if (!(numPeriods > 0)) {
-            throw new Error("Number of periods must be greater than zero.");
+            throw new Error("模拟周期数必须大于零。");
         }
         if (stepsPerPeriod < 20) {
-            throw new Error("steps_per_period should be at least 20.");
+            throw new Error("每周期步数至少为 20。");
         }
 
         // ----------------------------------------------------
@@ -405,7 +405,7 @@ function runSimulationJS(params) {
         // ----------------------------------------------------
 
         if (!(Bcenter > 0)) {
-            throw new Error("Magnetic field is zero.");
+            throw new Error("磁场为零，无法继续积分。");
         }
 
         var omega = Math.abs(charge) * Bcenter / mass;

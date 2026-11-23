@@ -913,7 +913,7 @@ function runSimulation() {
 
         if (!result.success) {
 
-            alert("Simulation failed:\n" + result.error);
+            alert("模拟失败：\n" + result.error);
 
             return;
 
@@ -1044,7 +1044,7 @@ function runSimulation() {
 
         console.error(error);
 
-        alert("Simulation failed:\n" + error);
+        alert("模拟失败：\n" + error);
 
     }
 
@@ -1213,7 +1213,7 @@ function checkBackend() {
 
     if (statusElement) {
 
-        statusElement.textContent = "LOCAL ENGINE READY";
+        statusElement.textContent = "本地引擎就绪";
 
     }
 
